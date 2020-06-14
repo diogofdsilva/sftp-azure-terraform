@@ -12,7 +12,7 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'SETUP: Run Terraform Init'
 
-- script: terraform plan -auto-approve
+- script: terraform plan -auto-approve infra.tf 
   workingDirectory: ./1-terraform
   env:
     azure_subscription_id: "b8176ecc-784b-4f18-9639-882d1da3df67"
