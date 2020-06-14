@@ -19,4 +19,4 @@ steps:
       -var 'azure_tenant_id=53d946b1-a3bd-45c9-a653-3afb6557e5c9'
       -var 'azure_location=eastus'  
   workingDirectory: ./1-terraform
-  displayName: 'SETUP: Run Terraform Apply (target=file share)'
+  displayName: 'SETUP: Run Terraform Apply'
