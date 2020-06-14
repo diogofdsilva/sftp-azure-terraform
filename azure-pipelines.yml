@@ -12,11 +12,11 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'SETUP: Run Terraform Init'
 
-- script: terraform plan \
-      -var 'azure_subscription_id=b8176ecc-784b-4f18-9639-882d1da3df67'\
-      -var 'azure_client_id=761e7965-77e9-42e5-a2ad-c8f254330262'  \
-      -var 'azure_client_secret=fb97fc88-8d0d-46ae-a41f-24b27a9fcbd5'  \
-      -var 'azure_tenant_id=53d946b1-a3bd-45c9-a653-3afb6557e5c9'  \
+- script: terraform plan 
+      -var 'azure_subscription_id=b8176ecc-784b-4f18-9639-882d1da3df67'
+      -var 'azure_client_id=761e7965-77e9-42e5-a2ad-c8f254330262'  
+      -var 'azure_client_secret=fb97fc88-8d0d-46ae-a41f-24b27a9fcbd5'  
+      -var 'azure_tenant_id=53d946b1-a3bd-45c9-a653-3afb6557e5c9'
       -var 'azure_location=eastus'  
   workingDirectory: ./1-terraform
   displayName: 'SETUP: Run Terraform Apply (target=file share)'
