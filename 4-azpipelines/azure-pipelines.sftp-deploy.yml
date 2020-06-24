@@ -1,0 +1,31 @@
+trigger:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: SFTP_AZURE_PRINCIPAL
+- group: SFTP_TERRAFORM_SETTINGS
+
+steps:
+    - script: |
+        az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
+        az account set --subscription $(ARM_SUBSCRIPTION_ID)
+    displayName: 'Login on Azure CLI'
+
+
+    - script: terraform init
+    workingDirectory: ./1-terraform
+    displayName: 'SETUP: Run Terraform Init'
+
+    - script: terraform apply -auto-approve
+    workingDirectory: ./1-terraform
+    env:
+    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+
+    displayName: 'SETUP: Run Terraform Apply (target=file share)'
+
+
