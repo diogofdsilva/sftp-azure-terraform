@@ -1,27 +1,33 @@
-trigger:
-  branches:
-    include:
-    - master
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
 
+trigger:
+    - master
+    
 pool:
-  vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-latest'
 
 variables:
-- group: ARM_AZURE_PRINCIPAL
-- name: AZURE_LOCATION
-  value: eastus 
+    - group: ARM_AZURE_PRINCIPAL
+    - name: AZURE_LOCATION
+    value: eastus 
 
 steps:
-- script: |
+    - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+    - script: |
         az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
         az account set --subscription $(ARM_SUBSCRIPTION_ID)
     displayName: 'Login on Azure CLI'
 
-- script: terraform init
+    - script: terraform init
     workingDirectory: ./1-terraform
     displayName: 'SETUP: Run Terraform Init'
 
-- script: terraform apply -auto-approve
+    - script: terraform apply -auto-approve
     workingDirectory: ./1-terraform
     env:
         azure_subscription_id:  $(ARM_SUBSCRIPTION_ID)
