@@ -1,9 +1,5 @@
-locals {
-    project_name = "diogofdsilva"
-}
-
 resource "azurerm_resource_group" "sftpresourcegroup" {
-    name     = "${local.project_name}_sftp_RG"
+    name     = "${var.project_name}_sftp_RG"
     location = var.AZURE_LOCATION
 
     tags = {
@@ -12,7 +8,7 @@ resource "azurerm_resource_group" "sftpresourcegroup" {
 }
 
 resource "azurerm_virtual_network" "sftpterraformnetwork" {
-    name                = "${local.project_name}_sftp_vnet"
+    name                = "${var.project_name}_sftp_vnet"
     address_space       = ["10.0.0.0/16"]
     location            = var.AZURE_LOCATION
     resource_group_name = azurerm_resource_group.sftpresourcegroup.name
@@ -23,18 +19,18 @@ resource "azurerm_virtual_network" "sftpterraformnetwork" {
 }
 
 resource "azurerm_subnet" "sftpterraformsubnet" {
-    name                 = "${local.project_name}_sftp_subnet"
+    name                 = "${var.project_name}_sftp_subnet"
     resource_group_name  = azurerm_resource_group.sftpresourcegroup.name
     virtual_network_name = azurerm_virtual_network.sftpterraformnetwork.name
     address_prefixes     = ["10.0.1.0/24"]
 }
 
 resource "azurerm_public_ip" "sftpterraformpublicip" {
-    name                         = "${local.project_name}_sftp_PIP"
+    name                         = "${var.project_name}_sftp_PIP"
     location                     = var.AZURE_LOCATION
     resource_group_name          = azurerm_resource_group.sftpresourcegroup.name
     allocation_method            = "Dynamic"
-    domain_name_label            = "${local.project_name}sftp"
+    domain_name_label            = "${var.project_name}sftp"
 
     tags = {
         environment = "sftp-azure-terraform"
@@ -42,7 +38,7 @@ resource "azurerm_public_ip" "sftpterraformpublicip" {
 }
 
 resource "azurerm_network_security_group" "sftpterraformnsg" {
-    name                = "${local.project_name}_sftp_NSG"
+    name                = "${var.project_name}_sftp_NSG"
     location            = var.AZURE_LOCATION
     resource_group_name = azurerm_resource_group.sftpresourcegroup.name
 
@@ -64,12 +60,12 @@ resource "azurerm_network_security_group" "sftpterraformnsg" {
 }
 
 resource "azurerm_network_interface" "sftpterraformnic" {
-    name                      = "${local.project_name}_sftp_NIC"
+    name                      = "${var.project_name}_sftp_NIC"
     location                  = var.AZURE_LOCATION
     resource_group_name       = azurerm_resource_group.sftpresourcegroup.name
 
     ip_configuration {
-        name                          = "${local.project_name}_sftp_NicConfiguration"
+        name                          = "${var.project_name}_sftp_NicConfiguration"
         subnet_id                     = azurerm_subnet.sftpterraformsubnet.id
         private_ip_address_allocation = "Dynamic"
         public_ip_address_id          = azurerm_public_ip.sftpterraformpublicip.id
@@ -107,14 +103,14 @@ resource "azurerm_storage_account" "sftpstorageaccount" {
 }
 
 resource "azurerm_linux_virtual_machine" "sftpterraformvm" {
-    name                  = "${local.project_name}-sftp-VM"
+    name                  = "${var.project_name}-sftp-VM"
     location              = var.AZURE_LOCATION
     resource_group_name   = azurerm_resource_group.sftpresourcegroup.name
     network_interface_ids = [azurerm_network_interface.sftpterraformnic.id]
     size                  = "Standard_DS1_v2"
 
     os_disk {
-        name              = "${local.project_name}_sftp_OsDisk"
+        name              = "${var.project_name}_sftp_OsDisk"
         caching           = "ReadWrite"
         storage_account_type = "Premium_LRS"
     }
@@ -126,7 +122,7 @@ resource "azurerm_linux_virtual_machine" "sftpterraformvm" {
         version   = "latest"
     }
 
-    computer_name  = "${local.project_name}-sftp-vm"
+    computer_name  = "${var.project_name}-sftp-vm"
     admin_username = "azureuser"
     admin_password = "P2ssw0rd2018"
     disable_password_authentication = false
@@ -142,7 +138,7 @@ resource "azurerm_linux_virtual_machine" "sftpterraformvm" {
 }
 
 resource "azurerm_storage_account" "sftpstorageacct" {
-    name                     = "${local.project_name}sharesftp"
+    name                     = "${var.project_name}sharesftp"
     resource_group_name      = azurerm_resource_group.sftpresourcegroup.name
     location                 = azurerm_resource_group.sftpresourcegroup.location
     account_tier             = "Standard"
