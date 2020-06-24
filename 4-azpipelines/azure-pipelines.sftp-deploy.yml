@@ -7,8 +7,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-- group: SFTP_AZURE_PRINCIPAL
-- group: SFTP_TERRAFORM_SETTINGS
+- group: ARM_AZURE_PRINCIPAL
+- name: AZURE_LOCATION
+  value: eastus 
 
 steps:
 - script: |
@@ -23,5 +24,9 @@ steps:
 - script: terraform apply -auto-approve
     workingDirectory: ./1-terraform
     env:
-        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        azure_subscription_id:  $(ARM_SUBSCRIPTION_ID)
+        azure_client_id:  $(ARM_CLIENT_ID)
+        azure_client_secret: $(ARM_CLIENT_SECRET)
+        azure_tenant_id:  $(ARM_TENANT_ID)
+        azure_location: $(AZURE_LOCATION)
     displayName: 'SETUP: Run Terraform Apply (target=file share)'
