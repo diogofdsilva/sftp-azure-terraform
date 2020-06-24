@@ -15,9 +15,6 @@ variables:
     - group: ARM_AZURE_PRINCIPAL
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
 - script: |
     az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
     az account set --subscription $(ARM_SUBSCRIPTION_ID)
@@ -30,9 +27,5 @@ steps:
 - script: terraform apply -auto-approve
   workingDirectory: ./1-terraform
   env:
-    azure_subscription_id:  $(ARM_SUBSCRIPTION_ID)
-    azure_client_id:  $(ARM_CLIENT_ID)
-    azure_client_secret: $(ARM_CLIENT_SECRET)
-    azure_tenant_id:  $(ARM_TENANT_ID)
-    azure_location: $(AZURE_LOCATION)
+    TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'SETUP: Run Terraform Apply (target=file share)'
