@@ -28,7 +28,7 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
-- script: terraform plan -refresh=true -detailed-exitcode -state=terraform.tfstate
+- script: terraform plan -refresh=true -state=terraform.tfstate
   workingDirectory: ./1-terraform
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
