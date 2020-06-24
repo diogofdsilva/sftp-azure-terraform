@@ -6,6 +6,10 @@ output "domain_name_label" {
   value = azurerm_public_ip.sftpterraformpublicip.fqdn
 }
 
-output "public_ip_address" {
-  value = azurerm_public_ip.sftpterraformpublicip.ip_address
+output "virtual_machine_admin_user" {
+  value = azurerm_linux_virtual_machine.sftpterraformvm.admin_username
+}
+
+output "virtual_machine_admin_pwd" {
+  value = azurerm_linux_virtual_machine.sftpterraformvm.admin_password
 }

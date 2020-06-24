@@ -10,6 +10,10 @@ pool:
     vmImage: 'ubuntu-latest'
 
 variables:
+    - name: VM_ADMIN_USER
+      value: azureuser
+    - name: VM_ADMIN_PWD
+      value:  
     - name: AZURE_LOCATION
       value: eastus 
     - group: ARM_AZURE_PRINCIPAL
@@ -22,10 +26,19 @@ steps:
 
 - script: terraform init
   workingDirectory: ./1-terraform
-  displayName: 'SETUP: Run Terraform Init'
+  displayName: 'INFRA SETUP: Run Terraform Init'
 
 - script: terraform apply -auto-approve
   workingDirectory: ./1-terraform
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
-  displayName: 'SETUP: Run Terraform Apply (target=file share)'
+  displayName: 'INFRA SETUP: Run Terraform Apply (target=file share)'
+
+- script: sshpass -p $(PASSWORD) scp usercreate.sh $(USER)@$(terraform output domain_name_label):/home/$(USER)
+  workingDirectory: ./2-sftpstart
+  env: 
+    USER: $(terraform output virtual_machine_admin_user)
+    PASSWORD: $(terraform output virtual_machine_admin_pwd)
+  displayName: 'SETUP: Copy bash to remote server via SSH'
+
+ 
