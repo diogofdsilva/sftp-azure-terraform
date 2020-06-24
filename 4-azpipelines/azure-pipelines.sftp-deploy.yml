@@ -23,8 +23,5 @@ steps:
 - script: terraform apply -auto-approve
     workingDirectory: ./1-terraform
     env:
-    ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
     displayName: 'SETUP: Run Terraform Apply (target=file share)'
-
-
