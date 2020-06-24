@@ -28,13 +28,19 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
+- script: terraform refresh
+  workingDirectory: ./1-terraform
+  env:
+    TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
+  displayName: 'INFRA SETUP: Run Terraform Refresh'
+
 - script: terraform apply -auto-approve
   workingDirectory: ./1-terraform
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
-  displayName: 'INFRA SETUP: Run Terraform Apply (target=file share)'
+  displayName: 'INFRA SETUP: Run Terraform Apply'
 
-- script: sshpass -p $(PASSWORD) scp usercreate.sh $(USER)@$(terraform output domain_name_label):/home/$(USER)
+- script: sshpass -p $(terraform output virtual_machine_admin_pwd) scp usercreate.sh $(terraform output virtual_machine_admin_user)@$(terraform output domain_name_label):/home/$(terraform output virtual_machine_admin_user)
   workingDirectory: ./2-sftpstart
   env: 
     USER: $(terraform output virtual_machine_admin_user)
