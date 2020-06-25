@@ -1,8 +1,6 @@
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
-    # The "feature" block is required for AzureRM provider 2.x.
-    # If you're using version 1.x, the "features" block is not allowed.
-    version = "~>2.0"
+    version = "2.15.0"
     features {}
 
     #subscription_id = var.AZURE_SUBSCRIPTION_ID
