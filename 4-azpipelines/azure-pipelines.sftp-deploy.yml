@@ -25,17 +25,14 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
-- script: terraform plan -state=terraform.tfstate && terraform apply -auto-approve -state=terraform.tfstate
+- script: terraform plan && terraform apply -auto-approve 
   workingDirectory: ./1-terraform
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'INFRA SETUP: Run Terraform PLAN and APPLY'
 
-- script: sshpass -p $(terraform output state=../1-terraform/terraform.tfstate virtual_machine_admin_user) scp usercreate.sh $(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_user)@$(terraform output -state=../1-terraform/terraform.tfstate domain_name_label):/home/$(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_user)
+- script: sshpass -p $(terraform output virtual_machine_admin_user) scp usercreate.sh $(terraform output virtual_machine_admin_user)@$(terraform output domain_name_label):/home/$(terraform output virtual_machine_admin_user)
   workingDirectory: ./2-sftpstart
-  env: 
-    USER: $(terraform output state=../1-terraform/terraform.tfstate virtual_machine_admin_user)
-    PASSWORD: $(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_pwd)
   displayName: 'SETUP: Copy bash to remote server via SSH'
 
  
