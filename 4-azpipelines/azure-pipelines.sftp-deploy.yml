@@ -10,13 +10,10 @@ pool:
     vmImage: 'ubuntu-latest'
 
 variables:
-    - name: VM_ADMIN_USER
-      value: azureuser
-    - name: VM_ADMIN_PWD
-      value:  
     - name: AZURE_LOCATION
       value: eastus 
     - group: ARM_AZURE_PRINCIPAL
+    - group: TF_AZURE_REMOTE_BACKEND
 
 steps:
 - script: |
@@ -24,20 +21,20 @@ steps:
     az account set --subscription $(ARM_SUBSCRIPTION_ID)
   displayName: 'Login on Azure CLI'
 
-- script: terraform init
+- script: terraform init  -backend-config="storage_account_name=$(AZURE_STATE_STORAGE_NAME)" -backend-config="resource_group_name=$(AZURE_STATE_RESOURCE_GROUP_NAME)"
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
-- script: terraform plan -state=terraform1.tfstate && terraform apply -auto-approve -state=terraform.tfstate
+- script: terraform plan -state=terraform.tfstate && terraform apply -auto-approve -state=terraform.tfstate
   workingDirectory: ./1-terraform
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'INFRA SETUP: Run Terraform PLAN and APPLY'
 
-- script: sshpass -p $(echo $PASSWORD) scp usercreate.sh $(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_user)@$(terraform output -state=../1-terraform/terraform.tfstate domain_name_label):/home/$(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_user)
+- script: sshpass -p $(terraform output state=../1-terraform/terraform.tfstate virtual_machine_admin_user) scp usercreate.sh $(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_user)@$(terraform output -state=../1-terraform/terraform.tfstate domain_name_label):/home/$(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_user)
   workingDirectory: ./2-sftpstart
   env: 
-    USER: $(terraform output virtual_machine_admin_user)
+    USER: $(terraform output state=../1-terraform/terraform.tfstate virtual_machine_admin_user)
     PASSWORD: $(terraform output -state=../1-terraform/terraform.tfstate virtual_machine_admin_pwd)
   displayName: 'SETUP: Copy bash to remote server via SSH'
 

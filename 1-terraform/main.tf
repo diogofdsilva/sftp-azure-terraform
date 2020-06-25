@@ -1,3 +1,12 @@
+terraform {
+  backend "azurerm" {
+    # resource_group_name  = "${var.AZURE_STATE_RESOURCE_GROUP_NAME}"
+    # storage_account_name = "${var.AZURE_STATE_STORAGE_NAME}"
+    container_name       = "tfstate"
+    key                  = "prod.terraform.tfstate"
+  }
+}
+
 resource "azurerm_resource_group" "sftpresourcegroup" {
     name     = "${var.project_name}_sftp_RG"
     location = var.AZURE_LOCATION
