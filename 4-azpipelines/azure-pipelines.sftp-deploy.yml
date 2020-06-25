@@ -31,16 +31,19 @@ steps:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'INFRA SETUP: Run Terraform PLAN and APPLY'
 
-
 - script: VMAU=$(terraform output virtual_machine_admin_user)
   workingDirectory: ./1-terraform
   displayName: 'ENV: USER'
 
+- script: echo $VMAU
+  workingDirectory: ./1-terraform
+  displayName: 'ECHO: USER'
+
 - script: VMAP=$(terraform output virtual_machine_admin_pwd)
   workingDirectory: ./1-terraform
-  displayName: 'ENV: USER'
+  displayName: 'ENV: PWD'
 
-- script: sshpass -p $(VMAP) scp usercreate.sh $(VMAU)@$(terraform output domain_name_label):/home/$(VMAU)
+- script: sshpass -p $(echo VMAP) scp usercreate.sh $(echo VMAU)@$(terraform output domain_name_label):/home/$(VMAU)
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
  
