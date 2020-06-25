@@ -43,7 +43,11 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'ENV: PWD'
 
-- script: sshpass -p $(echo VMAP) scp usercreate.sh $(echo VMAU)@$(terraform output domain_name_label):/home/$(VMAU)
+- script: FQDN=$(terraform output domain_name_label)
+  workingDirectory: ./1-terraform
+  displayName: 'ENV: FQDN'
+
+- script: sshpass -p $(echo $VMAP) scp usercreate.sh $(echo $VMAU)@$(echo $FQDN):/home/$(echo $VMAU)
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
  
