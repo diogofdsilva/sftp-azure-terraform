@@ -56,4 +56,11 @@ steps:
 - script: sshpass -p $VMAP scp -o StrictHostKeyChecking=no usercreate.sh $VMAU@$FQDN:/home/$VMAU
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
- 
+
+- script: sshpass -p $VMAP ssh $VMAU@$FQDN export UPASS=password123
+  workingDirectory: ./2-sftpstart
+  displayName: 'SETUP: Copy bash to remote server via SSH'
+
+- script: sshpass -p $VMAP ssh -tt $VMAU@$FQDN 'sudo -S ./usercreate.sh'
+  workingDirectory: ./2-sftpstart
+  displayName: 'SETUP: Copy bash to remote server via SSH'
