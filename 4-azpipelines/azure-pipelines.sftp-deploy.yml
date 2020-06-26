@@ -53,7 +53,7 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'SET: FQDN'
 
-- script: sshpass -p $VMAP scp usercreate.sh $VMAU@$FQDN:/home/$VMAU
+- script: sshpass -p $VMAP scp -o StrictHostKeyChecking=no usercreate.sh $VMAU@$FQDN:/home/$VMAU
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
  
