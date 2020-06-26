@@ -15,6 +15,8 @@ variables:
     - group: ARM_AZURE_PRINCIPAL
     - group: TF_AZURE_REMOTE_BACKEND
     - name: VMAU
+    - name: VMAP
+    - name: FQDN
 
 steps:
 
@@ -27,31 +29,31 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
-- script: |
-    curUser=$(terraform output virtual_machine_admin_user)
-    echo "##vso[task.setvariable variable=VMAU;]$curUser"
-  workingDirectory: ./1-terraform
-  displayName: 'SET: USER'
-
-- script: echo $VMAU
-  workingDirectory: ./1-terraform
-  displayName: 'ECHO: USER'
-
 - script: terraform plan && terraform apply -auto-approve 
   workingDirectory: ./1-terraform
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'INFRA SETUP: Run Terraform PLAN and APPLY'
 
-- script: export VMAP=$(terraform output virtual_machine_admin_pwd)
+- script: |
+    curUser=$(terraform output virtual_machine_admin_user)
+    echo "##vso[task.setvariable variable=VMAU;]$curUser"
   workingDirectory: ./1-terraform
-  displayName: 'ENV: PWD'
+  displayName: 'SET: USER'
 
-- script: export FQDN=$(terraform output domain_name_label)
+- script: |
+    curPwd=$(terraform output virtual_machine_admin_pwd)
+    echo "##vso[task.setvariable variable=VMAP;]$curPwd"
   workingDirectory: ./1-terraform
-  displayName: 'ENV: FQDN'
+  displayName: 'SET: PWD'
 
-- script: sshpass -p $(echo $VMAP) scp usercreate.sh $(echo $VMAU)@$(echo $FQDN):/home/$(echo $VMAU)
+- script: |
+    curFqdn=$(terraform output domain_name_label)
+    echo "##vso[task.setvariable variable=FQDN;]$curFqdn"
+  workingDirectory: ./1-terraform
+  displayName: 'SET: FQDN'
+
+- script: sshpass -p $VMAP scp usercreate.sh $VMAU@$FQDN:/home/$VMAU
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
  
