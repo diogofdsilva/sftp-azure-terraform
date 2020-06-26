@@ -61,6 +61,10 @@ steps:
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
 
+- script: sshpass -p $VMAP ssh -tt $VMAU@$FQDN 'sudo chmod 777 usercreate.sh'
+  workingDirectory: ./2-sftpstart
+  displayName: 'SETUP: Copy bash to remote server via SSH'
+
 - script: sshpass -p $VMAP ssh -tt $VMAU@$FQDN 'sudo -S ./usercreate.sh'
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
