@@ -16,7 +16,7 @@ variables:
     - group: TF_AZURE_REMOTE_BACKEND
 
 steps:
-- script: sudo apt-get update -y $$ sudo apt-get install -y sshpass
+- script: sudo apt-get update $$ sudo apt-get install -y sshpass
   workingDirectory: ./2-sftpstart
   displayName: 'INSTALL SSH PASS'
 
