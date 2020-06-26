@@ -25,7 +25,7 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
-- script: echo 'VMAU $(terraform output virtual_machine_admin_user)'
+- script: echo $(terraform output virtual_machine_admin_user)
   workingDirectory: ./1-terraform
   displayName: 'ECHO: USER'
 
@@ -35,7 +35,7 @@ steps:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'INFRA SETUP: Run Terraform PLAN and APPLY'
 
-- script: echo 'VMAU $(terraform output virtual_machine_admin_user)'
+- script: echo $(terraform output virtual_machine_admin_user)
   workingDirectory: ./1-terraform
   displayName: 'ECHO: USER'
 
