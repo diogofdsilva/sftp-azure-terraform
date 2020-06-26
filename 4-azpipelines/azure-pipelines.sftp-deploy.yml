@@ -59,12 +59,12 @@ steps:
 
 - script: sshpass -p $VMAP ssh $VMAU@$FQDN export UPASS=password123
   workingDirectory: ./2-sftpstart
-  displayName: 'SETUP: Copy bash to remote server via SSH'
+  displayName: 'SETUP: Set new EV via SSH'
 
 - script: sshpass -p $VMAP ssh -tt $VMAU@$FQDN 'sudo chmod 777 usercreate.sh'
   workingDirectory: ./2-sftpstart
-  displayName: 'SETUP: Copy bash to remote server via SSH'
+  displayName: 'SETUP: CHMOD'
 
 - script: sshpass -p $VMAP ssh -tt $VMAU@$FQDN 'sudo -S ./usercreate.sh'
   workingDirectory: ./2-sftpstart
-  displayName: 'SETUP: Copy bash to remote server via SSH'
+  displayName: 'RUN: Run remote Script'
