@@ -55,6 +55,10 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'ENV: FQDN'
 
+- script: apt-get install sshpass
+  workingDirectory: ./2-sftpstart
+  displayName: 'INSTALL SSH PASS'
+
 - script: sshpass -p $(echo $VMAP) scp usercreate.sh $(echo $VMAU)@$(echo $FQDN):/home/$(echo $VMAU)
   workingDirectory: ./2-sftpstart
   displayName: 'SETUP: Copy bash to remote server via SSH'
