@@ -14,6 +14,7 @@ variables:
       value: eastus 
     - group: ARM_AZURE_PRINCIPAL
     - group: TF_AZURE_REMOTE_BACKEND
+    - name: VMAU
 
 steps:
 
@@ -26,13 +27,11 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'INFRA SETUP: Run Terraform Init'
 
-- script: echo $(terraform output virtual_machine_admin_user)
-  workingDirectory: ./1-terraform
-  displayName: 'ECHO: USER'
-
 - script: |
-    echo '##vso[task.setvariable variable=VMAU]$(terraform output virtual_machine_admin_user)'
-  displayName: 'ENV: USER'
+    curUser=$(terraform output virtual_machine_admin_user)
+    echo "##vso[task.setvariable variable=VMAU;]$curUser"
+  workingDirectory: ./1-terraform
+  displayName: 'SET: USER'
 
 - script: echo $VMAU
   workingDirectory: ./1-terraform
@@ -43,11 +42,6 @@ steps:
   env:
     TF_VAR_AZURE_LOCATION: $(AZURE_LOCATION)
   displayName: 'INFRA SETUP: Run Terraform PLAN and APPLY'
-
-- script: echo $(terraform output virtual_machine_admin_user)
-  workingDirectory: ./1-terraform
-  displayName: 'ECHO: USER'
-
 
 - script: export VMAP=$(terraform output virtual_machine_admin_pwd)
   workingDirectory: ./1-terraform
