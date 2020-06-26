@@ -16,13 +16,6 @@ variables:
     - group: TF_AZURE_REMOTE_BACKEND
 
 steps:
-- script: sudo apt-get update 
-  workingDirectory: ./2-sftpstart
-  displayName: 'INSTALL SSH PASS'
-
-- script: sudo apt-get install -y sshpass
-  workingDirectory: ./2-sftpstart
-  displayName: 'INSTALL SSH PASS'
 
 - script: |
     az login --service-principal --username $(ARM_CLIENT_ID) --password $(ARM_CLIENT_SECRET) --tenant $(ARM_TENANT_ID)
@@ -37,6 +30,14 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'ECHO: USER'
 
+- script: |
+    echo '##vso[task.setvariable variable=VMAU]$(terraform output virtual_machine_admin_user)'
+  displayName: 'ENV: USER'
+
+- script: echo $VMAU
+  workingDirectory: ./1-terraform
+  displayName: 'ECHO: USER'
+
 - script: terraform plan && terraform apply -auto-approve 
   workingDirectory: ./1-terraform
   env:
@@ -47,13 +48,6 @@ steps:
   workingDirectory: ./1-terraform
   displayName: 'ECHO: USER'
 
-- script: export VMAU=$(terraform output virtual_machine_admin_user)
-  workingDirectory: ./1-terraform
-  displayName: 'ENV: USER'
-
-- script: echo $VMAU
-  workingDirectory: ./1-terraform
-  displayName: 'ECHO: USER'
 
 - script: export VMAP=$(terraform output virtual_machine_admin_pwd)
   workingDirectory: ./1-terraform
